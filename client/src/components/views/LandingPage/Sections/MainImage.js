@@ -1,5 +1,6 @@
 import React from 'react';
-
+// 메인이미지 컴포넌트
+// props을 통해 이미지 정보 가져오기
 function MainImage(props){
     return (
         <div style={{background: `linear-gradient(to bottom, rgba(0,0,0,0)
