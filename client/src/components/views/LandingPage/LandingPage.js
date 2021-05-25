@@ -17,6 +17,7 @@ function LandingPage() {
     //  setMovies()를 통해 Movies state에 넣음
     const [Movies, setMovies] = useState([])
     const [MainMovieImage, setMainMovieImage] = useState(null)
+    const [CurrentPage, setCurrentPage] = useState(0)
 
     // Movies state 변수를 선언한 뒤 리액트에게 effect를 사용함을 말함. useEffect Hook에 함수를 전달하고 있는데 이 함수가 바로 effect.
     // 컴포넌트를 렌더링할 때 리액트는 우리가 이용한 effect를 기억하였다가 DOM을 업데이트한 이후에 실행함.
@@ -24,20 +25,31 @@ function LandingPage() {
         // API_URL은 설정한 상수. 현재 인기있는 영화 불러옴
         const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
         
+        fetchMovies(endpoint)
+
+    }, [])
+
+    const fetchMovies = (endpoint)=>{
         // fetch 는 가져오는 것, response는 그 결과값
         fetch(endpoint)
         //fetch로는 데이터를 바로 사용할 수 없다. fetch를 사용할 땐 먼저 올바른 url로 요청을 보내야 하고, 바로 뒤에오는 응답에 대해 json()을 해줘야 한다.
         //  json()은 Response 스트림을 가져와 스트림이 완료될때까지 읽는다. 그리고 다 읽은 body의 텍스트를 Promise형태로 반환한다.
         .then(response => response.json()) //응답을 JSON 형태로 파싱합니다
         .then(response => {
-            console.log(response.results)
-            //  Object 1Depth 이하의 요소들을 모두 가져오고 싶은 경우에 전개 연산자(...) 활용이 용이
-            setMovies(...[response.results])
+            console.log(response)
+            //  Object 1Depth 이하의 요소들을 모두 가져오고 싶은 경우에 전개 연산자(...) 활용이 용이, loadMore버튼 누를때마다 원래 Movies에 들어있는 것에 계속 누적되도록
+            setMovies([...Movies, ...response.results])
             // 메인이미지는 인기있는 영화 가져온 response중 첫번째. 가장 인기 있는 영화의 이미지이므로
             setMainMovieImage(response.results[0])
+            setCurrentPage(response.page)
         })
+    }
 
-    }, [])
+    const loadMoreItems = () => {
+        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${CurrentPage+1}`;
+        fetchMovies(endpoint)
+
+    }
 
     return (
         <div style={{width: '100%', margin: '0'}}>
@@ -77,7 +89,7 @@ function LandingPage() {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <button>Load More</button>
+                <button onClick={loadMoreItems}>Load More</button>
             </div>
 
         </div>
