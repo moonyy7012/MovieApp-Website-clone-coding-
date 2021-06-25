@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Axios from 'axios'
 
 function Favorite(props) {
@@ -13,9 +13,10 @@ function Favorite(props) {
             userFrom,
             movieId
         }
-        //서버로 보낼 임의의 endpoint 지정
+        //서버로 보낼 임의의 endpoint 지정. 서버로 보냈으니 이제 서버단에서(server/routes/) 처리
         Axios.post('/api/favorite/favoriteNumber', variables)
         .then(response=>{
+            console.log(response.data)
             if(response.data.success){
 
             }else{

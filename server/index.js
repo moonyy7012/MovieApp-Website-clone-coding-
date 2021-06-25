@@ -33,7 +33,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// 아래 첫 번째 인자와 같이 시작하는 api들은 두번째 인자의 주소로 찾아가서 해당 파일에서 처리해주도록
 app.use('/api/users', require('./routes/users'));
+app.use('/api/favorite',require('./routes/favorite'));
 
 
 //use this to show the image you have in node js server to client (react js)
